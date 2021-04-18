@@ -24,11 +24,13 @@ namespace L2Proxy
         {
             services.AddControllers();
             services.AddHostedService<ProxyService>();
+            services.AddSingleton<IBlacklistService, BlacklistService>();
             services.AddSingleton<IEnumerable<Proxy.L2Proxy>>(x =>
             {
                 var proxySettings = x.GetRequiredService<IOptions<ProxySettings>>().Value;
                 var logger = x.GetRequiredService<ILogger<Proxy.L2Proxy>>();
-                return proxySettings.Proxies.Select(xx => new Proxy.L2Proxy(logger, xx)).ToList();
+                var blacklistService = x.GetRequiredService<IBlacklistService>();
+                return proxySettings.Proxies.Select(xx => new Proxy.L2Proxy(logger, xx, blacklistService)).ToList();
             });
             services.Configure<ProxySettings>(Configuration.GetSection(nameof(ProxySettings)));
         }

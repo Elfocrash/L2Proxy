@@ -13,11 +13,13 @@ namespace L2Proxy.Proxy
     public class L2Proxy
     {
         private readonly ILogger _logger;
+        private readonly IBlacklistService _blacklistService;
 
-        public L2Proxy(ILogger logger, ProxyInfo proxyInfo)
+        public L2Proxy(ILogger logger, ProxyInfo proxyInfo, IBlacklistService blacklistService)
         {
             _logger = logger;
             ProxyInfo = proxyInfo;
+            _blacklistService = blacklistService;
         }
 
         public ConcurrentDictionary<string, L2ClientConnection> ActiveConnections { get; } = new();
@@ -39,6 +41,13 @@ namespace L2Proxy.Proxy
                     var remoteClient = await server.AcceptTcpClientAsync();
                     remoteClient.NoDelay = true;
 
+                    if (_blacklistService.IsBlacklisted(remoteClient.Client.RemoteEndPoint))
+                    {
+                        remoteClient?.Close();
+                        remoteClient?.Dispose();
+                        continue;
+                    }
+
                     var ips = await Dns.GetHostAddressesAsync(ProxyInfo.L2ServerHost);
                     var gameserverIpEndpoint = new IPEndPoint(ips.First(), ProxyInfo.L2ServerPort);
                     var connectionKey = $"{(IPEndPoint) remoteClient.Client.RemoteEndPoint}|{gameserverIpEndpoint}";
@@ -56,7 +65,7 @@ namespace L2Proxy.Proxy
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Proxy fatal error.");
+                    _logger.LogError(ex, "Failed to handle connection.");
                 }
             }
         }

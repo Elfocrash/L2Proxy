@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace L2Proxy.Controllers
 {
     [ApiController]
-    [Route("api")]
+    [Route("api/proxies")]
     [ApiKey]
     public class ProxyController : ControllerBase
     {
@@ -17,7 +17,7 @@ namespace L2Proxy.Controllers
             _proxies = proxies;
         }
 
-        [HttpGet("proxies")]
+        [HttpGet("")]
         public IActionResult GetProxies()
         {
             return Ok(new
@@ -35,7 +35,7 @@ namespace L2Proxy.Controllers
             });
         }
 
-        [HttpGet("proxies/{proxyHost}/{proxyPort}")]
+        [HttpGet("{proxyHost}/{proxyPort}")]
         public IActionResult GetActiveConnections(string proxyHost, ushort proxyPort)
         {
             var proxy = _proxies.SingleOrDefault(x =>
@@ -55,7 +55,7 @@ namespace L2Proxy.Controllers
             });
         }
 
-        [HttpDelete("proxies/{proxyHost}/{proxyPort}/{clientHost}/{clientPort}")]
+        [HttpDelete("{proxyHost}/{proxyPort}/{clientHost}/{clientPort}")]
         public IActionResult DisconnectClient(string proxyHost, ushort proxyPort, string clientHost, ushort clientPort)
         {
             var proxy = _proxies.SingleOrDefault(x =>
