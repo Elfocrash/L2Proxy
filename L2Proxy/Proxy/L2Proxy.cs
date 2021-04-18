@@ -28,7 +28,7 @@ namespace L2Proxy.Proxy
         {
             var localIpAddress = string.IsNullOrEmpty(ProxyInfo.ProxyHost) ? IPAddress.IPv6Any : IPAddress.Parse(ProxyInfo.ProxyHost);
             var server = new TcpListener(new IPEndPoint(localIpAddress, ProxyInfo.ProxyPort));
-            server.Server.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
+            server.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
             server.Start();
 
             _logger.LogInformation($"L2Proxy started {ProxyInfo.ProxyPort} -> {ProxyInfo.L2ServerHost}:{ProxyInfo.L2ServerPort}");
