@@ -16,5 +16,7 @@ namespace L2Proxy.Settings
         public string L2ServerHost { get; init; }
 
         public ushort L2ServerPort { get; init; }
+
+        public int MaxConnections { get; init; }
     }
 }

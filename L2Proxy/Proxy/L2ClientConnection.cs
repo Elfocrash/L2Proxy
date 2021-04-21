@@ -46,8 +46,7 @@ namespace L2Proxy.Proxy
             {
                 _logger.LogInformation($"Closed {ClientEndpoint} => {_remoteServerIpEndPoint}");
                 _onDisconnect.Invoke();
-                _remoteClient?.Dispose();
-                _client?.Dispose();
+                Disconnect();
             }
         }
 
@@ -58,10 +57,12 @@ namespace L2Proxy.Proxy
 
         public void Disconnect()
         {
-            _remoteClient?.Close();
-            _remoteClient?.Dispose();
+            _client?.GetStream().Close();
             _client?.Close();
             _client?.Dispose();
+            _remoteClient?.GetStream().Close();
+            _remoteClient?.Close();
+            _remoteClient?.Dispose();
         }
     }
 }

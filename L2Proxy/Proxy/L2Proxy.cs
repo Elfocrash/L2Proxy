@@ -43,8 +43,13 @@ namespace L2Proxy.Proxy
 
                     if (_blacklistService.IsBlacklisted(remoteClient.Client.RemoteEndPoint))
                     {
-                        remoteClient?.Close();
-                        remoteClient?.Dispose();
+                        DisconnectClient(remoteClient);
+                        continue;
+                    }
+
+                    if (ActiveConnections.Count >= ProxyInfo.MaxConnections)
+                    {
+                        DisconnectClient(remoteClient);
                         continue;
                     }
 
@@ -68,6 +73,13 @@ namespace L2Proxy.Proxy
                     _logger.LogError(ex, "Failed to handle connection.");
                 }
             }
+        }
+
+        private static void DisconnectClient(TcpClient remoteClient)
+        {
+            remoteClient.GetStream()?.Close();
+            remoteClient?.Close();
+            remoteClient?.Dispose();
         }
     }
 }

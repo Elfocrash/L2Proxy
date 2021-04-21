@@ -28,9 +28,10 @@ namespace L2Proxy.Controllers
                     x.ProxyInfo.ProxyPort,
                     x.ProxyInfo.L2ServerHost,
                     x.ProxyInfo.L2ServerPort,
-                    connections = _proxies
+                    ActiveConnectionCount = _proxies
                         .Single(xx => xx.ProxyInfo.ProxyHost == x.ProxyInfo.ProxyHost && xx.ProxyInfo.ProxyPort == x.ProxyInfo.ProxyPort)
-                        .ActiveConnections.Count
+                        .ActiveConnections.Count,
+                    x.ProxyInfo.MaxConnections
                 }).ToList()
             });
         }
@@ -51,7 +52,8 @@ namespace L2Proxy.Controllers
             return Ok(new
             {
                 ActiveConnectionCount = activeConnections.Count,
-                ActiveConnections = activeConnections.Select(x => x.ClientEndpoint.ToString()).ToList()
+                ActiveConnections = activeConnections.Select(x => x.ClientEndpoint.ToString()).ToList(),
+                proxy.ProxyInfo.MaxConnections
             });
         }
 
