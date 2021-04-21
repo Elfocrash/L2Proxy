@@ -1,6 +1,8 @@
 # L2Proxy
 A simple MITM Proxy for Lineage 2
 
+Java side link: https://gist.github.com/Elfocrash/42ad7d6ff2f9780719d8f606bb74d1a7
+
 ### Features
 
 * Gameserver invisibility option - You are able to hide your server behind the proxies and keep your real server IP secret
