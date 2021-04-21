@@ -47,7 +47,7 @@ namespace L2Proxy.Proxy
                         continue;
                     }
 
-                    if (ActiveConnections.Count >= ProxyInfo.MaxConnections)
+                    if (ProxyInfo.MaxConnections > 0 && ActiveConnections.Count >= ProxyInfo.MaxConnections)
                     {
                         DisconnectClient(remoteClient);
                         continue;
