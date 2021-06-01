@@ -1,7 +1,7 @@
 # L2Proxy
 A simple MITM Proxy for Lineage 2
 
-Java side link: https://gist.github.com/Elfocrash/42ad7d6ff2f9780719d8f606bb74d1a7
+Java side link: https://gist.github.com/Elfocrash/644d99e27cfb798220340aadffd684e6
 
 ### Features
 
